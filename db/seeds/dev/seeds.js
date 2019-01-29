@@ -17,9 +17,16 @@ exports.seed = function(knex, Promise) {
         knex('meals').insert({
           name: 'Dinner'
         }, 'id')
+        .then(food =>{
+          return knex('meal_foods').insert(
+            {food_id: knex('foods').where('name', 'Brownie').select('id'), meal_id: knex('meals').where('name', 'Dinner').select('id')})
+        }, 'id')
         .then(() => console.log('Seeding complete!'))
         .catch(error => console.log(`Error seeding data: ${error}`))
       ]) // end return Promise.all
     })
     .catch(error => console.log(`Error seeding data: ${error}`));
 };
+
+// knex('foods').first.id
+// knex('foods').where('name', 'Brownie').select('id')
