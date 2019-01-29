@@ -1,0 +1,24 @@
+{
+  "name": "quantified-self-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prestonjarnagin/quantified-self-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/prestonjarnagin/quantified-self-backend/issues"
+  },
+  "homepage": "https://github.com/prestonjarnagin/quantified-self-backend#readme",
+  "dependencies": {
+    "knex": "^0.16.3",
+    "pg": "^7.8.0"
+  }
+}
