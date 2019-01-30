@@ -85,11 +85,14 @@ app.delete('/api/v1/foods/:id', (request, response) => {
 
 app.patch('/api/v1/foods/:id', (request, response) => {
   database('foods').where('id', request.params.id).update(request.body).select()
-    .then((food) => {
-      response.status(200).json(food);
-    })
-    .catch((error) => {
-      response.status(400).json({ error });
+    .then((a) => {
+      database('foods').where('id', request.params.id).select()
+        .then((foods) => {
+          response.status(200).json(foods);
+        })
+        .catch((error) => {
+          response.status(500).json({ error });
+        });
     });
 });
 
