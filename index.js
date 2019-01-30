@@ -9,7 +9,7 @@ const database = require('knex')(configuration);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('port', process.env.PORT || 3000);
-app.locals.title = 'Publications';
+app.locals.title = 'Quantified Self';
 
 app.get('/', (request, response) => {
   response.send('Hello');
@@ -38,6 +38,16 @@ app.get('/api/v1/foods', (request, response) => {
 
 app.get('/api/v1/foods/:id', (request, response) => {
   database('foods').where('id', request.params.id).select()
+    .then((foods) => {
+      response.status(200).json(foods);
+    })
+    .catch((error) => {
+      response.status(500).json({ error });
+    });
+});
+
+app.get('/api/v1/meals/:id', (request, response) => {
+  database('meals').where('id', request.params.id).select()
     .then((foods) => {
       response.status(200).json(foods);
     })
