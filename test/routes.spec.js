@@ -122,6 +122,26 @@ describe('API Routes', () => {
         });
       })
     })
-
   });
+
+  describe('POST',() => {
+
+    it('POST api/v1/foods', done => {
+      let food = {
+        name: "6oz Sirloin",
+        calories: 312
+      };
+      chai.request(server)
+      .post('/api/v1/foods')
+      .send(food)
+      .end((err, response) => {
+        response.should.have.status(201);
+        response.should.be.json;
+        response.body.should.have.property('id');
+        done();
+      });
+
+    });
+  });
+
 });
