@@ -15,6 +15,17 @@ app.get('/', (request, response) => {
   response.send('Hello');
 });
 
+app.get('/api/v1/meals', (request, response) => {
+  database('meals').select()
+    .then((meals) => {
+      response.status(200).json(meals);
+    })
+    .catch((error) => {
+      response.status(500).json({ error });
+    });
+});
+
+
 app.get('/api/v1/foods', (request, response) => {
   database('foods').select()
     .then((foods) => {
@@ -24,6 +35,7 @@ app.get('/api/v1/foods', (request, response) => {
       response.status(500).json({ error });
     });
 });
+
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
