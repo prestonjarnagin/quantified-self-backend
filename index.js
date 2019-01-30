@@ -17,19 +17,13 @@ app.get('/', (request, response) => {
   response.send('Hello');
 });
 
-app.get('/api/v1/foods', (request, response) => {
-  database('foods').select()
-    .then((foods) => {
-      response.status(200).json(foods);
-    })
-    .catch((error) => {
-      response.status(500).json({ error });
-    });
-});
+
 
 app.get('/api/v1/foods', (request, response) => {
   database('foods').select()
     .then((foods) => {
+      eval(pry.it)
+
       response.status(200).json(foods);
     })
     .catch((error) => {
@@ -38,19 +32,20 @@ app.get('/api/v1/foods', (request, response) => {
 });
 
 app.get('/api/v1/meals/:meal_id/foods', (request, response) => {
-  database('meal_foods').where('meal_id', request.params.meal_id).pluck('food_id').select()
-    .then(food_id => {
+  database('meal_foods').where('meal_id', request.params.meal_id).pluck('food_id')
+    .then(food_ids => {
+      var a = []
+      for (i = 0; i < food_ids.length; i++) {
+        a.push(database('foods').where('id', food_ids[i]).select());
+      }
       eval(pry.it)
-      database('foods').where('id', food_id).select()
-      .then(foods => {
-        if (foods.length) {
-          response.status(200).json(foods);
-        } else {
-          response.status(404).json({
-            error: `Could not find paper with id ${request.params.id}`
-          });
-        }
-      })
+      if (foods.length) {
+        response.status(200).json(foods);
+      } else {
+        response.status(404).json({
+          error: `Could not find paper with id ${request.params.id}`
+        });
+      }
     })
     .catch(error => {
       response.status(500).json({ error });
