@@ -52,7 +52,10 @@ describe('Client Routes', () => {
 });
 
 describe('API Routes', () => {
-  describe('GET', () =>{
+
+
+
+  describe('GET', () => {
     it('GET api/v1/foods', done => {
       chai.request(server)
       .get('/api/v1/foods')
