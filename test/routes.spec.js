@@ -63,7 +63,7 @@ describe('API Routes', () => {
         response.body[0].should.have.property('name');
         response.body[0].name.should.equal('Brownie');
         response.body[0].should.have.property('calories');
-        response.body[0].calories.should.equal('250');
+        response.body[0].calories.should.equal('130');
         done();
       });
     });
@@ -96,7 +96,7 @@ describe('API Routes', () => {
           response.body[0].should.have.property('name');
           response.body[0].name.should.equal('Brownie');
           response.body[0].should.have.property('calories');
-          response.body[0].calories.should.equal('250');
+          response.body[0].calories.should.equal('130');
           done();
         });
       })
