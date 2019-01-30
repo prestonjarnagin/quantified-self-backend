@@ -6,7 +6,27 @@ const server = require('../index');
 chai.use(chaiHttp);
 
 describe('Client Routes', () => {
+  it('should return the homepage with text', done => {
+    chai.request(server)
+    .get('/')
+    .end((err, response) => {
+      response.should.have.status(200);
+      response.should.be.html;
+      response.res.text.should.equal('Hello');
+      done();
+    });
+  });
 
+  it('should return the homepage with text', done => {
+    chai.request(server)
+    .get('/')
+    .end((err, response) => {
+      response.should.have.status(200);
+      response.should.be.html;
+      response.res.text.should.not.equal('Goodbye');
+      done();
+    });
+  });
 });
 
 describe('API Routes', () => {
