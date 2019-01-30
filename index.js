@@ -66,8 +66,6 @@ app.post('/api/v1/foods', (request, response) => {
 });
 
 app.delete('/api/v1/foods/:id', (request, response) => {
-
-
   database('foods').where('id', request.params.id).del().returning('id').then(id => response.send(`Deleted food ${id}`));
 });
 
