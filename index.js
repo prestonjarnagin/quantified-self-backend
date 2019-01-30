@@ -34,22 +34,17 @@ app.get('/api/v1/foods', (request, response) => {
 app.get('/api/v1/meals/:meal_id/foods', (request, response) => {
   database('meal_foods').where('meal_id', request.params.meal_id).pluck('food_id')
     .then(food_ids => {
-      var a = []
-      for (i = 0; i < food_ids.length; i++) {
-        a.push(database('foods').where('id', food_ids[i]).select());
-      }
-      eval(pry.it)
-      if (foods.length) {
-        response.status(200).json(foods);
+      if(food_ids.length == 0) {
+        response.send('There are no foods selected for that day.');
       } else {
-        response.status(404).json({
-          error: `Could not find paper with id ${request.params.id}`
-        });
+
+        var a = []
+        for (i = 0; i < food_ids.length; i++) {
+          a.push(database('foods').where('id', food_ids[i]).select())
+        }
+        response.status(200).json(JSON.stringify(a));
       }
     })
-    .catch(error => {
-      response.status(500).json({ error });
-    });
 });
 
 app.listen(app.get('port'), () => {
