@@ -12,7 +12,7 @@ exports.seed = function(knex, Promise) {
 
         // Insert a single paper, return the paper ID, insert 2 footnotes
         knex('foods').insert({
-          name: 'Brownie', calories: 250
+          name: 'Brownie', calories: 130
         }, 'id'),
         knex('foods').insert({
           name: 'Cake', calories: 400
