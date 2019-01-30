@@ -6,6 +6,8 @@ const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
 
+pry = require('pryjs')
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('port', process.env.PORT || 3000);
@@ -25,10 +27,11 @@ app.get('/api/v1/meals', (request, response) => {
     });
 });
 
-
 app.get('/api/v1/foods', (request, response) => {
   database('foods').select()
     .then((foods) => {
+      eval(pry.it)
+
       response.status(200).json(foods);
     })
     .catch((error) => {
@@ -81,6 +84,21 @@ app.delete('/api/v1/foods/:id', (request, response) => {
   database('foods').where('id', request.params.id).del().returning('id').then(id => response.send(`Deleted food ${id}`));
 });
 
+app.get('/api/v1/meals/:meal_id/foods', (request, response) => {
+  database('meal_foods').where('meal_id', request.params.meal_id).pluck('food_id')
+    .then(food_ids => {
+      if(food_ids.length == 0) {
+        response.send('There are no foods selected for that day.');
+      } else {
+
+        var a = []
+        for (i = 0; i < food_ids.length; i++) {
+          a.push(database('foods').where('id', food_ids[i]).select())
+        }
+        response.status(200).json(JSON.stringify(a));
+      }
+    })
+});
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
