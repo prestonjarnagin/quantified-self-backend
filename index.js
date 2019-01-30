@@ -9,7 +9,7 @@ const database = require('knex')(configuration);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('port', process.env.PORT || 3000);
-app.locals.title = 'Publications';
+app.locals.title = 'Quantified Self';
 
 app.get('/', (request, response) => {
   response.send('Hello');
@@ -46,6 +46,16 @@ app.get('/api/v1/foods/:id', (request, response) => {
     });
 });
 
+app.get('/api/v1/meals/:id', (request, response) => {
+  database('meals').where('id', request.params.id).select()
+    .then((foods) => {
+      response.status(200).json(foods);
+    })
+    .catch((error) => {
+      response.status(500).json({ error });
+    });
+});
+
 app.post('/api/v1/foods', (request, response) => {
   const food = request.body;
 
@@ -73,3 +83,5 @@ app.delete('/api/v1/foods/:id', (request, response) => {
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
 });
+
+module.exports = app.listen(4000);
