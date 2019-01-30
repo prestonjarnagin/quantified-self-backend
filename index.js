@@ -103,6 +103,19 @@ app.get('/api/v1/meals/:meal_id/foods', (request, response) => {
     })
 });
 
+app.patch('/api/v1/foods/:id', (request, response) => {
+  database('foods').where('id', request.params.id).update(request.body).select()
+    .then((a) => {
+      database('foods').where('id', request.params.id).select()
+        .then((foods) => {
+          response.status(200).json(foods);
+        })
+        .catch((error) => {
+          response.status(500).json({ error });
+        });
+    });
+});
+
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
