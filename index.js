@@ -87,9 +87,19 @@ app.delete('/api/v1/foods/:id', (request, response) => {
 
 
 app.get('/api/v1/meals/:meal_id/foods', (request, response) => {
-
-  database('meal_foods').where('meal_id', request.params.meal_id).join('foods', 'meal_foods.food_id', '=', 'foods.id').select('id','name','calories').then(foods => {
-    response.status(200).json(foods);
+  database('meal_foods').where('meal_id', request.params.meal_id)
+  .join('foods', 'meal_foods.food_id', '=', 'foods.id')
+  .join('meals', 'meal_foods.meal_id', '=', 'meals.id')
+  .select('foods.id AS id','foods.name AS name','calories','meals.name AS meal_name')
+  .then(foods => {
+    var new_foods = []
+    var meal_name = foods[0].meal_name
+    foods.forEach(function(v){
+      delete v.meal_name
+      new_foods.push(v)
+    })
+    var final_json = {'id': request.params.meal_id, 'name': meal_name, "foods": new_foods}
+    response.status(200).json(final_json);
     })
 });
 
