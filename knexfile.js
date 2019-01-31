@@ -21,6 +21,9 @@ module.exports = {
       directory: './db/migrations',
       tableName: 'knex_migrations'
     },
+    seeds: {
+      directory: './db/seeds/production'
+    },
     useNullAsDefault: true,
     pool: {
       min: 2,
