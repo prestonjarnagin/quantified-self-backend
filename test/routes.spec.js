@@ -122,6 +122,31 @@ describe('API Routes', () => {
         });
       })
     })
+
+    it('GET api/v1/meals/:id/foods', done => {
+      chai.request(server)
+      .get(`/api/v1/meals/`)
+      .end((err, response) => {
+        let mealID = response.body[0].id;
+        chai.request(server)
+        .get(`/api/v1/meals/${mealID}/foods`)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.should.be.json;
+          response.body.should.be.a('object');
+          response.body.should.have.property('id');
+          response.body.should.have.property('name');
+          response.body.should.have.property('foods');
+          response.body.foods.should.be.a('array');
+          let food = response.body.foods[0]
+          food.should.have.property('id');
+          food.should.have.property('name');
+          food.should.have.property('calories');
+          done();
+        });
+      })
+    })
+
   });
 
   describe('POST',() => {
@@ -142,30 +167,27 @@ describe('API Routes', () => {
       });
 
     });
-  });
 
-  it('GET api/v1/meals/:id/foods', done => {
-    chai.request(server)
-    .get(`/api/v1/meals/`)
-    .end((err, response) => {
-      let mealID = response.body[0].id;
-      chai.request(server)
-      .get(`/api/v1/meals/${mealID}/foods`)
-      .end((err, response) => {
-        response.should.have.status(200);
-        response.should.be.json;
-        response.body.should.be.a('object');
-        response.body.should.have.property('id');
-        response.body.should.have.property('name');
-        response.body.should.have.property('foods');
-        response.body.foods.should.be.a('array');
-        let food = response.body.foods[0]
-        food.should.have.property('id');
-        food.should.have.property('name');
-        food.should.have.property('calories');
-        done();
-      });
+    it('POST api/v1/meals/:id/foods/:id', done =>{
+      database('foods').where('name', 'Ice Cream').select()
+        .then((food) => {
+          database('meals').where('name', 'Dinner').select()
+            .then((meal) => {
+              chai.request(server)
+              .post(`/api/v1/meals/${meal[0].id}/foods/${food[0].id}`)
+              .send()
+              .end((err, response) => {
+                response.should.have.status(201);
+                response.should.be.json;
+                response.body.should.have.property('message')
+                response.body.message.should.equal('Successfully added Ice Cream to Dinner');
+                done();
+              });
+            })
+        })
+      //add get request to check relationship has been created
     })
-  })
+
+  });
 
 });

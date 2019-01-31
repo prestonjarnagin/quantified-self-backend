@@ -17,6 +17,9 @@ exports.seed = function(knex, Promise) {
         knex('foods').insert({
           name: 'Cake', calories: 400
         }, 'id'),
+        knex('foods').insert({
+          name: 'Ice Cream', calories: 800
+        }, 'id'),
         knex('meals').insert({
           name: 'Dinner'
         }, 'id')
