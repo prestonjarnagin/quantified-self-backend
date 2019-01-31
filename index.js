@@ -6,7 +6,7 @@ const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
 
-
+pry = require('pryjs')
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -116,6 +116,23 @@ app.patch('/api/v1/foods/:id', (request, response) => {
     });
 });
 
+app.delete('/api/v1/meals/:meal_id/foods/:id', (request, response) => {
+  database('meal_foods').where('meal_id', request.params.meal_id)
+    .then(meal_foods => {
+      relevent_meal_food = []
+      for (i = 0; i < meal_foods.length; i++) {
+        if(request.params.id == meal_foods[i].food_id) {
+          relevent_meal_food.push(meal_foods[i])
+        }
+      }
+      database('meal_foods').where('id', relevent_meal_food[0].id).del()
+        .then(id => {
+          response.send(`Successfully removed food from meal`)
+        });
+    })
+});
+
+
 app.post('/api/v1/meals/:meal_id/foods/:food_id', (request, response) => {
 
   database('meals').where('id', request.params.meal_id).then(meal =>{
@@ -132,12 +149,6 @@ app.post('/api/v1/meals/:meal_id/foods/:food_id', (request, response) => {
       });
     })
   })
-
-
-
-
-
-
 });
 
 
