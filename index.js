@@ -117,17 +117,18 @@ app.patch('/api/v1/foods/:id', (request, response) => {
 });
 
 app.delete('/api/v1/meals/:meal_id/foods/:id', (request, response) => {
-  database('meal_foods').raw('WHERE (meal_id = request.params.meal_id AND food_id = request.params.food_id)')
-  .then(foods => {
-    eval(pry.it)
-    var new_foods = []
-    var meal_name = foods[0].meal_name
-    foods.forEach(function(v){
-      delete v.meal_name
-      new_foods.push(v)
-    })
-    var final_json = {'id': request.params.meal_id, 'name': meal_name, "foods": new_foods}
-    response.status(200).json(final_json);
+  database('meal_foods').where('meal_id', request.params.meal_id)
+    .then(meal_foods => {
+      relevent_meal_food = []
+      for (i = 0; i < meal_foods.length; i++) {
+        if(request.params.id == meal_foods[i].food_id) {
+          relevent_meal_food.push(meal_foods[i])
+        }
+      }
+      database('meal_foods').where('id', relevent_meal_food[0].id).del()
+        .then(id => {
+          response.send(`Successfully removed food from meal`)
+        });
     })
 });
 
