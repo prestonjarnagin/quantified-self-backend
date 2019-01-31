@@ -116,6 +116,30 @@ app.patch('/api/v1/foods/:id', (request, response) => {
     });
 });
 
+app.post('/api/v1/meals/:meal_id/foods/:food_id', (request, response) => {
+
+  database('meals').where('id', request.params.meal_id).then(meal =>{
+    var mealName = meal[0].name
+    database('foods').where('id', request.params.food_id).then(food =>{
+      var foodName = food[0].name
+      database('meal_foods').insert({food_id: request.params.food_id, meal_id: request.params.meal_id})
+      .select()
+      .then(food_meal => {
+        response.status(201).json({message: `Successfully added ${foodName} to ${mealName}`})
+      })
+      .catch(error => {
+        response.status(500).json({ error });
+      });
+    })
+  })
+
+
+
+
+
+
+});
+
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
