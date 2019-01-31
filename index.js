@@ -6,7 +6,7 @@ const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
 
-
+pry = require('pryjs')
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -116,6 +116,20 @@ app.patch('/api/v1/foods/:id', (request, response) => {
     });
 });
 
+app.delete('/api/v1/meals/:meal_id/foods/:id', (request, response) => {
+  database('meal_foods').raw('WHERE (meal_id = request.params.meal_id AND food_id = request.params.food_id)')
+  .then(foods => {
+    eval(pry.it)
+    var new_foods = []
+    var meal_name = foods[0].meal_name
+    foods.forEach(function(v){
+      delete v.meal_name
+      new_foods.push(v)
+    })
+    var final_json = {'id': request.params.meal_id, 'name': meal_name, "foods": new_foods}
+    response.status(200).json(final_json);
+    })
+});
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
