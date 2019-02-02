@@ -25,15 +25,7 @@ app.get('/', (request, response) => {
   response.send('Hello');
 });
 
-app.get('/api/v1/meals', (request, response) => {
-  database('meals').select()
-    .then((meals) => {
-      response.status(200).json(meals);
-    })
-    .catch((error) => {
-      response.status(500).json({ error });
-    });
-});
+
 
 
 
@@ -92,7 +84,33 @@ app.delete('/api/v1/foods/:id', (request, response) => {
   database('foods').where('id', request.params.id).del().returning('id').then(id => response.send(`Deleted food ${id}`));
 });
 
+app.get('/api/v1/meals', (request, response) => {
+  database('meal_foods')
+  .join('foods', 'meal_foods.food_id', '=', 'foods.id')
+  .join('meals', 'meal_foods.meal_id', '=', 'meals.id')
+  .select('foods.id AS id','foods.name AS name','calories','meals.name AS meal_name', 'meals.id AS meal_id')
+  .then(foods => {
+  
+    var meal_names = []
+    for (var i = 0; i < foods.length; i++){
+      if meal_names.includes(foods[i].meal_id){
 
+      }
+      else {
+        meal_names.push({id:foods[i].meal_id, name: foods[i].meal_name, foods: []})
+      }
+    }
+    for (var i=0; i < )
+//////////////
+
+
+    var final_json = {'id': request.params.meal_id, 'name': meal_name, "foods": new_foods}
+    response.status(200).json(final_json);
+    })
+    .catch((error) => {
+      response.status(500).json({ error });
+    });
+});
 
 app.get('/api/v1/meals/:meal_id/foods', (request, response) => {
   database('meal_foods').where('meal_id', request.params.meal_id)
