@@ -31,13 +31,13 @@ exports.seed = function(knex, Promise) {
         }, 'id'),
         knex('meals').insert({
           name: 'Breakfast'
-        }, 'id')
+        }, 'id'),
         knex('meals').insert({
           name: 'Lunch'
-        }, 'id')
+        }, 'id'),
         knex('meals').insert({
           name: 'Dinner'
-        }, 'id')
+        }, 'id'),
         knex('meals').insert({
           name: 'Snack'
         }, 'id')
