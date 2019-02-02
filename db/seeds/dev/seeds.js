@@ -20,8 +20,26 @@ exports.seed = function(knex, Promise) {
         knex('foods').insert({
           name: 'Ice Cream', calories: 800
         }, 'id'),
+        knex('foods').insert({
+          name: 'Donut', calories: 300
+        }, 'id'),
+        knex('foods').insert({
+          name: 'Custard', calories: 500
+        }, 'id'),
+        knex('foods').insert({
+          name: 'Kale', calories: 20
+        }, 'id'),
+        knex('meals').insert({
+          name: 'Breakfast'
+        }, 'id')
+        knex('meals').insert({
+          name: 'Lunch'
+        }, 'id')
         knex('meals').insert({
           name: 'Dinner'
+        }, 'id')
+        knex('meals').insert({
+          name: 'Snack'
         }, 'id')
         .then(food =>{
           return knex('meal_foods').insert(
@@ -30,6 +48,14 @@ exports.seed = function(knex, Promise) {
         .then(food =>{
           return knex('meal_foods').insert(
             {food_id: knex('foods').where('name', 'Cake').select('id'), meal_id: knex('meals').where('name', 'Dinner').select('id')})
+        }, 'id')
+        .then(food =>{
+          return knex('meal_foods').insert(
+            {food_id: knex('foods').where('name', 'Ice Cream').select('id'), meal_id: knex('meals').where('name', 'Breakfast').select('id')})
+        }, 'id')
+        .then(food =>{
+          return knex('meal_foods').insert(
+            {food_id: knex('foods').where('name', 'Custard').select('id'), meal_id: knex('meals').where('name', 'Snack').select('id')})
         }, 'id')
         .then(() => console.log('Seeding complete!'))
         .catch(error => console.log(`Error seeding data: ${error}`))
