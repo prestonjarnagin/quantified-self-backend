@@ -90,18 +90,20 @@ app.get('/api/v1/meals', (request, response) => {
   .join('meals', 'meal_foods.meal_id', '=', 'meals.id')
   .select('foods.id AS id','foods.name AS name','calories','meals.name AS meal_name', 'meals.id AS meal_id')
   .then(foods => {
-  
-    var meal_names = []
+
+    var meal_ids = []
     for (var i = 0; i < foods.length; i++){
-      if meal_names.includes(foods[i].meal_id){
+      if (meal_ids.includes(foods[i].meal_id)){
 
       }
       else {
-        meal_names.push({id:foods[i].meal_id, name: foods[i].meal_name, foods: []})
+        meal_ids.push(foods[i].meal_id)
       }
     }
-    for (var i=0; i < )
-//////////////
+
+
+
+
 
 
     var final_json = {'id': request.params.meal_id, 'name': meal_name, "foods": new_foods}
