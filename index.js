@@ -89,7 +89,15 @@ app.post('/api/v1/foods', (request, response) => {
 });
 
 app.delete('/api/v1/foods/:id', (request, response) => {
-  database('foods').where('id', request.params.id).del().returning('id').then(id => response.send(`Deleted food ${id}`));
+  database('meal_foods').join('foods', 'meal_foods.food_id', '=', 'foods.id')
+  .where('food_id', request.params.id)
+  .del()
+  .then((data) => {
+    database('foods')
+    .where('id', request.params.id)
+    .del().returning('id')
+    .then(id => response.send(`Deleted food ${id}`));
+  })
 });
 
 
