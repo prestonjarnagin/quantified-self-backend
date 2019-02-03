@@ -90,6 +90,7 @@ app.get('/api/v1/meals', (request, response) => {
   .join('meals', 'meal_foods.meal_id', '=', 'meals.id')
   .select('foods.id AS id','foods.name AS name','calories','meals.name AS meal_name', 'meals.id AS meal_id')
   .then(foods => {
+    // Gather Unique Meal IDs
     var meal_ids = [];
     for (var i = 0; i < foods.length; i++){
       if (meal_ids.includes(foods[i].meal_id)){}
@@ -97,23 +98,30 @@ app.get('/api/v1/meals', (request, response) => {
         meal_ids.push(foods[i].meal_id)
       }
     }
+    // Create new array to hold meal-food objects
     meals = [];
 
+    // Take each unique meal ID, and make a new obejct
     meal_ids.forEach(oMealID =>{
       meal = {
         id: oMealID,
         name: "",
         foods: []
       }
+      // Add new meal object to array, even if it won't have any foods
       meals.push(meal)
 
+      //Go back throuhg foods, and add any foods that match this new meal object
       foods.forEach(food => {
         if(food.meal_id == oMealID){
+          // Update meal name before deleteing it off the food object
           meal.name = food.meal_name
 
+          // Delete unwanted properties
           delete food.meal_id;
           delete food.meal_name;
 
+          // Attach food
           meal.foods.push(food);
         }
       })
