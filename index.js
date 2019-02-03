@@ -90,24 +90,35 @@ app.get('/api/v1/meals', (request, response) => {
   .join('meals', 'meal_foods.meal_id', '=', 'meals.id')
   .select('foods.id AS id','foods.name AS name','calories','meals.name AS meal_name', 'meals.id AS meal_id')
   .then(foods => {
-
-    var meal_ids = []
+    var meal_ids = [];
     for (var i = 0; i < foods.length; i++){
-      if (meal_ids.includes(foods[i].meal_id)){
-
-      }
+      if (meal_ids.includes(foods[i].meal_id)){}
       else {
         meal_ids.push(foods[i].meal_id)
       }
     }
+    meals = [];
 
+    meal_ids.forEach(oMealID =>{
+      meal = {
+        id: oMealID,
+        name: "",
+        foods: []
+      }
+      meals.push(meal)
 
+      foods.forEach(food => {
+        if(food.meal_id == oMealID){
+          meal.name = food.meal_name
 
+          delete food.meal_id;
+          delete food.meal_name;
 
-
-
-    var final_json = {'id': request.params.meal_id, 'name': meal_name, "foods": new_foods}
-    response.status(200).json(final_json);
+          meal.foods.push(food);
+        }
+      })
+    })
+    response.status(200).json(meals);
     })
     .catch((error) => {
       response.status(500).json({ error });
