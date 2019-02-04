@@ -25,15 +25,7 @@ app.get('/', (request, response) => {
   response.send('Hello');
 });
 
-app.get('/api/v1/meals', (request, response) => {
-  database('meals').select()
-    .then((meals) => {
-      response.status(200).json(meals);
-    })
-    .catch((error) => {
-      response.status(500).json({ error });
-    });
-});
+
 
 
 
@@ -92,7 +84,54 @@ app.delete('/api/v1/foods/:id', (request, response) => {
   database('foods').where('id', request.params.id).del().returning('id').then(id => response.send(`Deleted food ${id}`));
 });
 
+app.get('/api/v1/meals', (request, response) => {
+  database('meal_foods')
+  .join('foods', 'meal_foods.food_id', '=', 'foods.id')
+  .join('meals', 'meal_foods.meal_id', '=', 'meals.id')
+  .select('foods.id AS id','foods.name AS name','calories','meals.name AS meal_name', 'meals.id AS meal_id')
+  .then(foods => {
+    // Gather Unique Meal IDs
+    var meal_ids = [];
+    for (var i = 0; i < foods.length; i++){
+      if (meal_ids.includes(foods[i].meal_id)){}
+      else {
+        meal_ids.push(foods[i].meal_id)
+      }
+    }
+    // Create new array to hold meal-food objects
+    meals = [];
 
+    // Take each unique meal ID, and make a new obejct
+    meal_ids.forEach(oMealID =>{
+      meal = {
+        id: oMealID,
+        name: "",
+        foods: []
+      }
+      // Add new meal object to array, even if it won't have any foods
+      meals.push(meal)
+
+      //Go back throuhg foods, and add any foods that match this new meal object
+      foods.forEach(food => {
+        if(food.meal_id == oMealID){
+          // Update meal name before deleteing it off the food object
+          meal.name = food.meal_name
+
+          // Delete unwanted properties
+          delete food.meal_id;
+          delete food.meal_name;
+
+          // Attach food
+          meal.foods.push(food);
+        }
+      })
+    })
+    response.status(200).json(meals);
+    })
+    .catch((error) => {
+      response.status(500).json({ error });
+    });
+});
 
 app.get('/api/v1/meals/:meal_id/foods', (request, response) => {
   database('meal_foods').where('meal_id', request.params.meal_id)
