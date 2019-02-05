@@ -92,6 +92,17 @@ app.delete('/api/v1/foods/:id', (request, response) => {
   })
 });
 
+app.get('/api/v1/meals_ids', (request, response) => {
+  database('meals')
+  .select('id','name')
+  .then(meals => {
+    response.status(200).json(meals);
+  })
+  .catch(error => {
+    response.status(500).json({ error });
+  })
+})
+
 app.get('/api/v1/meals', (request, response) => {
   database('meal_foods')
   .join('foods', 'meal_foods.food_id', '=', 'foods.id')
