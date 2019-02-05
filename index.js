@@ -96,7 +96,12 @@ app.get('/api/v1/meals', (request, response) => {
   database('meal_foods')
   .join('foods', 'meal_foods.food_id', '=', 'foods.id')
   .join('meals', 'meal_foods.meal_id', '=', 'meals.id')
-  .select('foods.id AS id','foods.name AS name','calories','meals.name AS meal_name', 'meals.id AS meal_id')
+  .select('foods.id AS id',
+          'foods.name AS name',
+          'calories','meals.name AS meal_name',
+          'meals.id AS meal_id',
+          'meals.updated_at AS meal_updated_at',
+         )
   .then(foods => {
     // Gather Unique Meal IDs
     var meal_ids = [];
@@ -114,20 +119,26 @@ app.get('/api/v1/meals', (request, response) => {
       meal = {
         id: oMealID,
         name: "",
-        foods: []
+        updated_at:"",
+        foods: [],
       }
       // Add new meal object to array, even if it won't have any foods
+
       meals.push(meal)
 
       //Go back throuhg foods, and add any foods that match this new meal object
       foods.forEach(food => {
         if(food.meal_id == oMealID){
           // Update meal name before deleteing it off the food object
-          meal.name = food.meal_name
+          meal.name = food.meal_name;
+          meal.updated_at = food.meal_updated_at;
+
 
           // Delete unwanted properties
+
           delete food.meal_id;
           delete food.meal_name;
+          delete food.meal_updated_at;
 
           // Attach food
           meal.foods.push(food);
