@@ -96,6 +96,7 @@ app.get('/api/v1/meals_ids', (request, response) => {
 app.get('/api/v1/meals', (request, response) => {
   Food.foodWithMeals()
   .then(foods => {
+
     // Gather Unique Meal IDs
     var meal_ids = [];
     for (var i = 0; i < foods.length; i++){
