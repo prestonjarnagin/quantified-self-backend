@@ -11,6 +11,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set('port', process.env.PORT || 3000);
 app.locals.title = 'Quantified Self';
 
+const foods = require('./app/routes/api/v1/foods')
+
 app.use(function (request, response, next) {
   response.header("Access-Control-Allow-Origin",
     "*");
@@ -25,20 +27,7 @@ app.get('/', (request, response) => {
   response.send('Hello');
 });
 
-
-
-
-
-app.get('/api/v1/foods', (request, response) => {
-  database('foods').select()
-    .then((foods) => {
-
-      response.status(200).json(foods);
-    })
-    .catch((error) => {
-      response.status(500).json({ error });
-    });
-});
+app.use('/api/v1/foods', foods)
 
 
 app.get('/api/v1/foods/:id', (request, response) => {
