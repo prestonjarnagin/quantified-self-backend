@@ -112,8 +112,10 @@ app.get('/api/v1/meals', (request, response) => {
           'calories','meals.name AS meal_name',
           'meals.id AS meal_id',
           'meals.updated_at AS meal_updated_at',
+          'meal_foods.updated_at AS meal_food_updated_at'
          )
   .then(foods => {
+
     // Gather Unique Meal IDs
     var meal_ids = [];
     for (var i = 0; i < foods.length; i++){
