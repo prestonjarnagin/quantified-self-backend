@@ -10,6 +10,16 @@ const index = (request, response) => {
     })
 }
 
+const show = (request, response) => {
+  Food.find(request.params.id)
+  .then((food) => {
+    response.status(200).json(food);
+  })
+  .catch((error) => {
+    response.status(500).json({error});
+  })
+}
+
 module.exports = {
-  index,
+  index, show,
 }

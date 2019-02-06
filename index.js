@@ -30,17 +30,6 @@ app.get('/', (request, response) => {
 
 app.use('/api/v1/foods', foods)
 
-
-app.get('/api/v1/foods/:id', (request, response) => {
-  database('foods').where('id', request.params.id).select()
-    .then((foods) => {
-      response.status(200).json(foods);
-    })
-    .catch((error) => {
-      response.status(500).json({ error });
-    });
-});
-
 app.get('/api/v1/meals/:id', (request, response) => {
   database('meals').where('id', request.params.id).select()
     .then((foods) => {

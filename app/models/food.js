@@ -6,6 +6,10 @@ const all = () =>
   database('foods')
   .select();
 
+const find = (id) =>
+  database('foods')
+  .where('id', id)
+
 const foodWithMeals = () =>
   database('meal_foods')
   .join('foods', 'meal_foods.food_id', '=', 'foods.id')
@@ -17,5 +21,5 @@ const foodWithMeals = () =>
         'meals.updated_at AS meal_updated_at')
 
 module.exports = {
-  all, foodWithMeals,
+  all, find, foodWithMeals,
 }
