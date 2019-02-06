@@ -12,6 +12,7 @@ app.set('port', process.env.PORT || 3000);
 app.locals.title = 'Quantified Self';
 
 const foods = require('./app/routes/api/v1/foods')
+const Food = require('./app/models/food')
 
 app.use(function (request, response, next) {
   response.header("Access-Control-Allow-Origin",
@@ -93,15 +94,7 @@ app.get('/api/v1/meals_ids', (request, response) => {
 })
 
 app.get('/api/v1/meals', (request, response) => {
-  database('meal_foods')
-  .join('foods', 'meal_foods.food_id', '=', 'foods.id')
-  .join('meals', 'meal_foods.meal_id', '=', 'meals.id')
-  .select('foods.id AS id',
-          'foods.name AS name',
-          'calories','meals.name AS meal_name',
-          'meals.id AS meal_id',
-          'meals.updated_at AS meal_updated_at',
-         )
+  Food.foodWithMeals()
   .then(foods => {
     // Gather Unique Meal IDs
     var meal_ids = [];
