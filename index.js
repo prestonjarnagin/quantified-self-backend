@@ -84,7 +84,7 @@ app.get('/api/v1/meals_ids', (request, response) => {
 })
 
 app.get('/api/v1/meals', (request, response) => {
-  Food.foodWithMeals()
+  Meal.mealWithFoods()
   .then(foods => {
 
     // Gather Unique Meal IDs
