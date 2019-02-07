@@ -13,6 +13,7 @@ app.locals.title = 'Quantified Self';
 
 const foods = require('./app/routes/api/v1/foods')
 const Food = require('./app/models/food')
+const Meal = require('./app/models/meal')
 
 app.use(function (request, response, next) {
   response.header("Access-Control-Allow-Origin",
