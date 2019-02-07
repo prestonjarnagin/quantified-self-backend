@@ -1,0 +1,14 @@
+language: node_js
+node_js:
+  - "iojs"
+  - "stable"
+
+services:
+  - postgresql
+
+before_script:
+  - psql -c 'CREATE DATABASE calorie_tracker;' -U postgres
+
+test:
+  adapter: postgresql
+  database: travis_ci_test
