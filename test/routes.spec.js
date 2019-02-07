@@ -53,8 +53,6 @@ describe('Client Routes', () => {
 
 describe('API Routes', () => {
 
-
-
   describe('GET', () => {
     it('GET api/v1/foods', done => {
       chai.request(server)
@@ -79,7 +77,11 @@ describe('API Routes', () => {
         response.should.be.json;
         response.body.should.be.a('array');
         response.body[0].should.have.property('name');
-        // response.body[0].name.should.equal('Dinner');
+        response.body[0].should.have.property('id');
+        response.body[0].should.have.property('foods');
+        response.body[0].foods[0].should.have.property('id');
+        response.body[0].foods[0].should.have.property('name');
+        response.body[0].foods[0].should.have.property('calories');
         done();
       });
     });

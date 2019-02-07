@@ -11,6 +11,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set('port', process.env.PORT || 3000);
 app.locals.title = 'Quantified Self';
 
+const foods = require('./app/routes/api/v1/foods')
+const Food = require('./app/models/food')
+const Meal = require('./app/models/meal')
+
 app.use(function (request, response, next) {
   response.header("Access-Control-Allow-Origin",
     "*");
@@ -25,31 +29,7 @@ app.get('/', (request, response) => {
   response.send('Hello');
 });
 
-
-
-
-
-app.get('/api/v1/foods', (request, response) => {
-  database('foods').select()
-    .then((foods) => {
-
-      response.status(200).json(foods);
-    })
-    .catch((error) => {
-      response.status(500).json({ error });
-    });
-});
-
-
-app.get('/api/v1/foods/:id', (request, response) => {
-  database('foods').where('id', request.params.id).select()
-    .then((foods) => {
-      response.status(200).json(foods);
-    })
-    .catch((error) => {
-      response.status(500).json({ error });
-    });
-});
+app.use('/api/v1/foods', foods)
 
 app.get('/api/v1/meals/:id', (request, response) => {
   database('meals').where('id', request.params.id).select()
@@ -104,16 +84,7 @@ app.get('/api/v1/meals_ids', (request, response) => {
 })
 
 app.get('/api/v1/meals', (request, response) => {
-  database('meal_foods')
-  .join('foods', 'meal_foods.food_id', '=', 'foods.id')
-  .join('meals', 'meal_foods.meal_id', '=', 'meals.id')
-  .select('foods.id AS id',
-          'foods.name AS name',
-          'calories','meals.name AS meal_name',
-          'meals.id AS meal_id',
-          'meals.updated_at AS meal_updated_at',
-          'meal_foods.updated_at AS meal_food_updated_at'
-         )
+  Meal.mealWithFoods()
   .then(foods => {
 
     // Gather Unique Meal IDs
